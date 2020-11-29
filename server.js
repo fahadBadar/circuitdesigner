@@ -53,8 +53,25 @@ app.get("/users/logout", (req, res) => {
 
 app.post("/users/login", async (req, res) => {
     let {username, password} = req.body;
-    req.flash("username", username);
-    res.redirect("/users/dashboard");
+    pool.query(`SELECT * FROM users WHERE name = $1`,[username], (error, results) => {
+        if (results.rows.length > 0) {
+            const user = results.rows[0];
+            bcrypt.compare(password, user.password, (err, isMatch) => {
+                if (err) {
+                    throw err;
+                }
+
+                if (isMatch) {
+                    req.flash("username", username);
+                    res.redirect("/users/dashboard");
+                } else {
+                    req.flash("error", "Password doesn't match");
+                    res.redirect("/users/login");
+                }
+            })
+        }
+    })
+
 })
 
 app.post("/users/register", async (req, res) => {
