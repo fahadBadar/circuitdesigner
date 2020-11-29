@@ -1,0 +1,30 @@
+{
+  "name": "test",
+  "version": "0.1.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodes server.js",
+    "dev": "nodemon server.js"
+  },
+  "private": true,
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-plugin-eslint": "~4.5.0",
+    "@vue/cli-service": "~4.5.0",
+    "nodemon": "^2.0.6"
+  },
+  "dependencies": {
+    "bcrypt": "^5.0.0",
+    "dotenv": "^8.2.0",
+    "ejs": "^3.1.5",
+    "express": "^4.17.1",
+    "express-flash": "0.0.2",
+    "express-session": "^1.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "pg": "^8.5.1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
