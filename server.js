@@ -1,22 +1,30 @@
 const express = require('express');
+const cookieParser = require('cookie-parser');
+const session = require('express-session');
+const flash = require('express-flash');
 const bcrypt = require("bcrypt");
-const session = require("express-session");
-const flash = require("express-flash");
-const app = express();
 const jwt = require("jsonwebtoken");
+
+
 const {pool} = require('./dbConfig');
+
+const app = express();
+const sessionStore = new session.MemoryStore;
 
 const PORT = process.env.PORT || 4000;
 
+// View Engines
 app.set("view engine", "ejs");
 app.use((express.urlencoded)({extended: false}));//send details form front end to server
-app.use(flash());
+app.use(cookieParser('secret'));
 app.use(session({
-    secret: 'secret',//encrypts all session data
-    resave: false,// if none of the session values have changes dont save again
-    saveUninitialized: false//if there are any session values with nothing in them dont save them
-
+    cookie: { maxAge: 60000 },
+    store: sessionStore,
+    saveUninitialized: true,
+    resave: 'true',
+    secret: 'secret'
 }));
+app.use(flash());
 
 
 app.get("/", (req, res) => {
@@ -41,6 +49,12 @@ app.get("/users/logout", (req, res) => {
     res.redirect("/users/login");
     req.flash("success_msg", "you are now logged out");
 
+})
+
+app.post("/users/login", async (req, res) => {
+    let {username, password} = req.body;
+    req.flash("username", username);
+    res.redirect("/users/dashboard");
 })
 
 app.post("/users/register", async (req, res) => {
