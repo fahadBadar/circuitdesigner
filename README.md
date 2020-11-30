@@ -1,6 +1,6 @@
 # Circuit Designer Project
 This project is the start of my A Level Computer Science coursework
-###Libraries used
+##Libraries used
 * Express (incl. session and flash)
   * Express is the framework for the back end API and serving pages hosted by NodeJS. Also allows
    the
