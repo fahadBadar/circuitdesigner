@@ -4,16 +4,17 @@ const session = require('express-session');
 const flash = require('express-flash');
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-
-
+const bodyParser = require("body-parser");
 const {pool} = require('./dbConfig');
-
 const app = express();
 const sessionStore = new session.MemoryStore;
-
 const PORT = process.env.PORT || 4000;
 
 // View Engines
+app.use(bodyParser.urlencoded({extended:true}))
+app.use(bodyParser.json())
+app.use(cookieParser())
+app.use(express.json());
 app.set("view engine", "ejs");
 app.use((express.urlencoded)({extended: false}));//send details form front end to server
 app.use(cookieParser('secret'));
@@ -52,7 +53,7 @@ app.get("/users/logout", (req, res) => {
 })
 
 app.post("/users/login", async (req, res) => {
-    let {username, password} = req.body;
+    let {username, password} = req.body ;
     pool.query(`SELECT * FROM users WHERE name = $1`,[username], (error, results) => {
         if (results.rows.length > 0) {
             const user = results.rows[0];
@@ -62,8 +63,13 @@ app.post("/users/login", async (req, res) => {
                 }
 
                 if (isMatch) {
-                    req.flash("username", username);
-                    res.redirect("/users/dashboard");
+                    const token = jwt.sign({
+                        username: results.rows[0].name}, process.env.JWT_KEY, {expiresIn: "1h"});
+                    console.log(token);
+                    res.cookie('authcookie',token,{maxAge:900000,httpOnly:true})
+                    //res.json({token: token});// send token back to the user
+                    //req.flash("username", username);
+                    //res.redirect("/users/dashboard");
                 } else {
                     req.flash("error", "Password doesn't match");
                     res.redirect("/users/login");
@@ -139,3 +145,5 @@ app.post("/users/register", async (req, res) => {
 app.listen(PORT, () => {
     console.log(`server running on port ${PORT}`)
 });
+
+
