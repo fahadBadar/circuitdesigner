@@ -49,7 +49,7 @@ app.get("/users/dashboard", authnticateToken, (req, res) => {//hyperlink directo
 app.get("/users/logout", (req, res) => {
     //req.logOut();
     //res.clearCookie('authcookie',{domain: 'localhost',path: '/'});
-    res.cookie('authcookie', '', {expires: new Date(1), path: '/' });
+    res.clearCookie('authcookie');
     res.redirect("/users/login");
     req.flash("success_msg", "you are now logged out");
 
@@ -157,7 +157,8 @@ function authnticateToken(req,res,next) {
         console.log("verifying: ", data);
         if(err){
             console.log("error");
-            res.sendStatus(403);
+            res.redirect("/users/login");
+
         }
         else if(data.username){
             console.log("verified");
