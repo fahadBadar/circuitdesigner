@@ -47,7 +47,9 @@ app.get("/users/dashboard", authnticateToken, (req, res) => {//hyperlink directo
 });
 
 app.get("/users/logout", (req, res) => {
-    req.logOut();
+    //req.logOut();
+    //res.clearCookie('authcookie',{domain: 'localhost',path: '/'});
+    res.cookie('authcookie', '', {expires: new Date(1), path: '/' });
     res.redirect("/users/login");
     req.flash("success_msg", "you are now logged out");
 
