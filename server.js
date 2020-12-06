@@ -28,7 +28,7 @@ app.use(session({
 app.use(flash());
 
 
-app.get("/", (req, res) => {
+app.get("/",(req, res) => {
     res.render("index");
 
 });
@@ -37,12 +37,13 @@ app.get("/users/register", (req, res) => {//hyperlink directory
     res.render("register");//open register.ejs
 });
 
-app.get("/users/login", (req, res) => {//hyperlink directory
+app.get("/users/login",(req, res) => {//hyperlink directory
     res.render("login");//open login.ejs
 });
 
-app.get("/users/dashboard", (req, res) => {//hyperlink directory
-    res.render("dashboard", {user: req.username});//open dashboard.ejs
+app.get("/users/dashboard", authnticateToken, (req, res) => {//hyperlink directory
+    console.log("username:  ", req.username);
+    res.render("dashboard", {username: req.username});//open dashboard.ejs
 });
 
 app.get("/users/logout", (req, res) => {
@@ -67,9 +68,10 @@ app.post("/users/login", async (req, res) => {
                         username: results.rows[0].name}, process.env.JWT_KEY, {expiresIn: "1h"});
                     console.log(token);
                     res.cookie('authcookie',token,{maxAge:900000,httpOnly:true})
+
                     //res.json({token: token});// send token back to the user
                     //req.flash("username", username);
-                    //res.redirect("/users/dashboard");
+                    res.redirect("/users/dashboard");
                 } else {
                     req.flash("error", "Password doesn't match");
                     res.redirect("/users/login");
@@ -146,4 +148,19 @@ app.listen(PORT, () => {
     console.log(`server running on port ${PORT}`)
 });
 
-
+function authnticateToken(req,res,next) {
+    console.log("checking token");
+    const authcookie = req.cookies.authcookie;
+    jwt.verify(authcookie,process.env.JWT_KEY,(err,data)=>{
+        console.log("verifying: ", data);
+        if(err){
+            console.log("error");
+            res.sendStatus(403);
+        }
+        else if(data.username){
+            console.log("verified");
+            req.username = data.username;
+            next();
+        }
+    })
+}
