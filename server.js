@@ -42,13 +42,11 @@ app.get("/users/login",(req, res) => {//hyperlink directory
 });
 
 app.get("/users/dashboard", authnticateToken, (req, res) => {//hyperlink directory
-    console.log("username:  ", req.username);
+
     res.render("dashboard", {username: req.username});//open dashboard.ejs
 });
 
 app.get("/users/logout", (req, res) => {
-    //req.logOut();
-    //res.clearCookie('authcookie',{domain: 'localhost',path: '/'});
     res.clearCookie('authcookie');
     res.redirect("/users/login");
     req.flash("success_msg", "you are now logged out");
@@ -68,11 +66,10 @@ app.post("/users/login", async (req, res) => {
                 if (isMatch) {
                     const token = jwt.sign({
                         username: results.rows[0].name}, process.env.JWT_KEY, {expiresIn: "1h"});
-                    console.log(token);
+
                     res.cookie('authcookie',token,{maxAge:900000,httpOnly:true})
 
-                    //res.json({token: token});// send token back to the user
-                    //req.flash("username", username);
+
                     res.redirect("/users/dashboard");
                 } else {
                     req.flash("error", "Password doesn't match");
@@ -109,7 +106,7 @@ app.post("/users/register", async (req, res) => {
         res.render("register", {errors});
     } else {
         let hashedPassword = await bcrypt.hash(password, 10);
-        //console.log(hashedPassword);
+
 
         pool.query(
                 `SELECT * FROM users 
@@ -118,8 +115,8 @@ app.post("/users/register", async (req, res) => {
                 if (error) {
                     throw  error;
                 }
-                console.log("worked");
-                console.log(results.rows);
+
+
 
                 if (results.rows.length > 0) {
                     errors.push({message: "Username Taken"});
@@ -134,7 +131,7 @@ app.post("/users/register", async (req, res) => {
                             if (error) {
                                 throw error
                             }
-                            console.log(results.rows);
+
                             req.flash("success_msg", "you are now registered please login");
                             res.redirect("/users/login");
                         }
@@ -147,21 +144,21 @@ app.post("/users/register", async (req, res) => {
 
 
 app.listen(PORT, () => {
-    console.log(`server running on port ${PORT}`)
+
 });
 
 function authnticateToken(req,res,next) {
-    console.log("checking token");
+
     const authcookie = req.cookies.authcookie;
     jwt.verify(authcookie,process.env.JWT_KEY,(err,data)=>{
-        console.log("verifying: ", data);
+
         if(err){
-            console.log("error");
+
             res.redirect("/users/login");
 
         }
         else if(data.username){
-            console.log("verified");
+
             req.username = data.username;
             next();
         }
