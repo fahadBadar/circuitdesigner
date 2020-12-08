@@ -84,12 +84,6 @@ app.post("/users/login", async (req, res) => {
 app.post("/users/register", async (req, res) => {
     let {username, password, confirmPassword} = req.body;
 
-    console.log({
-        username,
-        password,
-        confirmPassword
-    })
-
     let errors = [];
 
     if (!username || !password || !confirmPassword) {
