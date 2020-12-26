@@ -1,6 +1,30 @@
 <!doctype html>
     <html lang="en">
+    <style>
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .dragDiv {
+            position: absolute;
+            z-index: 9;
+            text-align: center;
+            border: 1px solid #d3d3d3;
+            padding: 30px;
+            cursor: move;
+            z-index: 10;
+            background-color: rgb(108, 24, 177);
+            color: #fff;
+            font-size: 20px;
+            font-weight: 500;
+        }
+    </style>
         <head>
+            <link href='https://fonts.googleapis.com/css?family=DM Sans' rel='stylesheet'>
+            <style>
+                body {
+                    font-family: 'DM Sans';font-size: 20px;
+                }
+            </style>
             <meta charset="UTF-8">
             <meta name="viewport"
                   content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
@@ -12,5 +36,53 @@
             <h1>Dashboard</h1>
             <h1>Hello <%= username %></h1>
             <a href="/users/logout">logout</a>
+            <div class="dragDiv" onclick="dragNewElement()">
+                Click and Drag
+            </div>
+            <script>
+                function dragNewElement() {
+                    const originalEle = document.querySelector(".dragDiv");
+                    dragElement(originalEle.cloneNode(true));
+                }
+
+                function dragElement(ele) {
+                    var body = document.getElementsByTagName("BODY")[0];
+                    body.appendChild(ele);
+                    var pos1 = 0,
+                        pos2 = 0,
+                        pos3 = 0,
+                        pos4 = 0;
+                    if (document.querySelector(ele.id + "header")) {
+                        document.getElementById(
+                            ele.id + "header"
+                        ).onmousedown = dragMouseDown;
+                    }
+                    else {
+                        ele.onmousedown = dragMouseDown;
+                    }
+                    function dragMouseDown(e) {
+                        e = e || window.event;
+                        e.preventDefault();
+                        pos3 = e.clientX;
+                        pos4 = e.clientY;
+                        document.onmouseup = closeDragElement;
+                        document.onmousemove = elementDrag;
+                    }
+                    function elementDrag(e) {
+                        e = e || window.event;
+                        e.preventDefault();
+                        pos1 = pos3 - e.clientX;
+                        pos2 = pos4 - e.clientY;
+                        pos3 = e.clientX;
+                        pos4 = e.clientY;
+                        ele.style.top = ele.offsetTop - pos2 + "px";
+                        ele.style.left = ele.offsetLeft - pos1 + "px";
+                    }
+                    function closeDragElement() {
+                        document.onmouseup = null;
+                        document.onmousemove = null;
+                    }
+                }
+            </script>
         </body>
     </html>
