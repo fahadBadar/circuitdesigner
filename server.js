@@ -11,9 +11,10 @@ const sessionStore = new session.MemoryStore;
 const PORT = process.env.PORT || 4000;
 
 // View Engines
-app.use(bodyParser.urlencoded({extended:true}))
-app.use(bodyParser.json())
-app.use(cookieParser())
+app.use(express.static('public'));
+app.use(bodyParser.urlencoded({extended:true}));
+app.use(bodyParser.json());
+app.use(cookieParser());
 app.use(express.json());
 app.set("view engine", "ejs");
 app.use((express.urlencoded)({extended: false}));//send details form front end to server
