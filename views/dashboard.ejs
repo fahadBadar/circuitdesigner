@@ -1,247 +1,367 @@
 <!doctype html>
-    <html lang="en">
+<html lang="en">
 
-        <head>
-
-
-            <meta charset="UTF-8">
-            <meta name="viewport"
-                  content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-            <meta http-equiv="X-UA-Compatible" content="ie=edge">
-            <title>Document</title>
-            <link rel="stylesheet" type="text/css" href="/css/draganddrop.css">
+<head>
 
 
-
-        </head>
-        <body translate="no" >
-        <h1>Dashboard</h1>
-        <h1>Hello <%= username %></h1>
-        <a href="/users/logout">logout</a>
-        <svg id="svg">
-
-            <g id="diagram" data-drag="diagram:diagram" data-drag-type="diagram">
-                <g id="node-layer">
-
-                    <!-- logic gates -->
-                    <g class="node-container">
-                        <rect class="node-background" width="204" height="128" x="0" y="0" rx="6" ry="6" />
-
-
-                        <g class="node-content">
-
-                            <rect class="content-round-rect" width="200" height="82" x="2" y="44" rx="4" ry="4" />
-                            <rect class="content-rect" width="200" height="77" x="2" y="44" />
-
-                            <g class="inputs">
-
-                                <g class="input-field" transform="translate(0, 10)">
-                                    <g class="port">
-                                        <circle class="port-outer" cx="15" cy="10" r="7.5" />
-                                        <circle class="port-inner" cx="15" cy="10" r="5" />
-                                        <circle class="port-scrim" cx="15" cy="10" r="7.5" />
-                                    </g>
-                                    <text class="port-label" x="28" y="14">Input 1</text>
-                                </g>
-
-                                <g class="input-field" transform="translate(0, 100)">
-                                    <g class="port">
-                                        <circle class="port-outer" cx="15" cy="10" r="7.5" />
-                                        <circle class="port-inner" cx="15" cy="10" r="5" />
-                                        <circle class="port-scrim" cx="15" cy="10" r="7.5" />
-                                    </g>
-                                    <text class="port-label" x="28" y="14">Input 2</text>
-                                </g>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="/css/draganddrop.css">
 
 
 
+</head>
+<body translate="no" >
+<h1>Dashboard</h1>
+<h1>Hello <%= username %></h1>
+<a href="/users/logout">logout</a>
+
+<script>
+    let button = document.createElement("button");
+    button.innerHTML = "AND GATE";
+    let body = document.getElementsByTagName("body")[0];
+    body.appendChild(button);
+    button.addEventListener ("click", function() {
+        //create gate and give co-ordinates
+
+
+    });
+</script>
+<svg id="svg">
+
+    <g id="diagram" data-drag="diagram:diagram" data-drag-type="diagram">
+        <g id="node-layer">
+
+            <!-- logic gates -->
+            <g class="node-container">
+
+                <rect class="node-background" width="204" height="128" x="0" y="0" rx="6" ry="6" />
+                <path class="node-gate" transform="scale(3)" d="M28 26.094 C20.823999999999998 26.094 9 26.094 9 26.094 L9 0.09600000000000009 L28 0.0940000000000012 C35.176 0.0940000000000012 41 5.917999999999999 41 13.094000000000001 C41 20.270000000000003 35.176 26.094 28 26.094 Z M41 13.094000000000001 L50.056 13.094000000000001 M0 6.594000000000001 L9 6.594000000000001 M0 19.594 L9 19.594" />
+
+                <g class="node-content">
+
+
+                    <g class="inputs">
+
+                        <g class="input-field" transform="translate(0, 10)">
+                            <g class="port">
+                                <circle class="port-outer" cx="5" cy="10" r="7.5" />
+                                <circle class="port-inner" cx="5" cy="10" r="5" />
+                                <circle class="port-scrim" cx="5" cy="10" r="7.5" />
                             </g>
-
-                            <g class="outputs">
-
-                                <g class="output-field" transform="translate(0, 55)">
-                                    <g class="port" data-clickable="false">
-                                        <circle class="port-outer" cx="189" cy="10" r="7.5" />
-                                        <circle class="port-inner" cx="189" cy="10" r="5" />
-                                        <circle class="port-scrim" cx="189" cy="10" r="7.5" data-clickable="false" />
-                                    </g>
-                                    <text class="port-label" x="176" y="14">Output</text>
-                                </g>
-
-                            </g>
-
                         </g>
-                    </g>
-                    <g class="node-container">
-                        <rect class="node-background" width="204" height="128" x="0" y="0" rx="6" ry="6" />
 
-
-                        <g class="node-content">
-
-                            <rect class="content-round-rect" width="200" height="82" x="2" y="44" rx="4" ry="4" />
-                            <rect class="content-rect" width="200" height="77" x="2" y="44" />
-
-                            <g class="inputs">
-
-                                <g class="input-field" transform="translate(0, 10)">
-                                    <g class="port">
-                                        <circle class="port-outer" cx="15" cy="10" r="7.5" />
-                                        <circle class="port-inner" cx="15" cy="10" r="5" />
-                                        <circle class="port-scrim" cx="15" cy="10" r="7.5" />
-                                    </g>
-                                    <text class="port-label" x="28" y="14">Input 1</text>
-                                </g>
-
-                                <g class="input-field" transform="translate(0, 100)">
-                                    <g class="port">
-                                        <circle class="port-outer" cx="15" cy="10" r="7.5" />
-                                        <circle class="port-inner" cx="15" cy="10" r="5" />
-                                        <circle class="port-scrim" cx="15" cy="10" r="7.5" />
-                                    </g>
-                                    <text class="port-label" x="28" y="14">Input 2</text>
-                                </g>
-
-
-
+                        <g class="input-field" transform="translate(0, 49)">
+                            <g class="port">
+                                <circle class="port-outer" cx="5" cy="10" r="7.5" />
+                                <circle class="port-inner" cx="5" cy="10" r="5" />
+                                <circle class="port-scrim" cx="5" cy="10" r="7.5" />
                             </g>
-
-                            <g class="outputs">
-
-                                <g class="output-field" transform="translate(0, 55)">
-                                    <g class="port" data-clickable="false">
-                                        <circle class="port-outer" cx="189" cy="10" r="7.5" />
-                                        <circle class="port-inner" cx="189" cy="10" r="5" />
-                                        <circle class="port-scrim" cx="189" cy="10" r="7.5" data-clickable="false" />
-                                    </g>
-                                    <text class="port-label" x="176" y="14">Output</text>
-                                </g>
-
-                            </g>
-
                         </g>
-                    </g>
-                    <g class="node-container">
-                        <rect class="node-background" width="204" height="128" x="0" y="0" rx="6" ry="6" />
-
-
-                        <g class="node-content">
-
-                            <rect class="content-round-rect" width="200" height="82" x="2" y="44" rx="4" ry="4" />
-                            <rect class="content-rect" width="200" height="77" x="2" y="44" />
-
-                            <g class="inputs">
-
-                                <g class="input-field" transform="translate(0, 10)">
-                                    <g class="port">
-                                        <circle class="port-outer" cx="15" cy="10" r="7.5" />
-                                        <circle class="port-inner" cx="15" cy="10" r="5" />
-                                        <circle class="port-scrim" cx="15" cy="10" r="7.5" />
-                                    </g>
-                                    <text class="port-label" x="28" y="14">Input 1</text>
-                                </g>
-
-                                <g class="input-field" transform="translate(0, 100)">
-                                    <g class="port">
-                                        <circle class="port-outer" cx="15" cy="10" r="7.5" />
-                                        <circle class="port-inner" cx="15" cy="10" r="5" />
-                                        <circle class="port-scrim" cx="15" cy="10" r="7.5" />
-                                    </g>
-                                    <text class="port-label" x="28" y="14">Input 2</text>
-                                </g>
 
 
 
-                            </g>
-
-                            <g class="outputs">
-
-                                <g class="output-field" transform="translate(0, 55)">
-                                    <g class="port" data-clickable="false">
-                                        <circle class="port-outer" cx="189" cy="10" r="7.5" />
-                                        <circle class="port-inner" cx="189" cy="10" r="5" />
-                                        <circle class="port-scrim" cx="189" cy="10" r="7.5" data-clickable="false" />
-                                    </g>
-                                    <text class="port-label" x="176" y="14">Output</text>
-                                </g>
-
-                            </g>
-
-                        </g>
-                    </g>
-                    <g class="node-container">
-                        <rect class="node-background" width="204" height="128" x="0" y="0" rx="6" ry="6" />
-
-
-                        <g class="node-content">
-
-                            <rect class="content-round-rect" width="200" height="82" x="2" y="44" rx="4" ry="4" />
-                            <rect class="content-rect" width="200" height="77" x="2" y="44" />
-
-                            <g class="inputs">
-
-                                <g class="input-field" transform="translate(0, 10)">
-                                    <g class="port">
-                                        <circle class="port-outer" cx="15" cy="10" r="7.5" />
-                                        <circle class="port-inner" cx="15" cy="10" r="5" />
-                                        <circle class="port-scrim" cx="15" cy="10" r="7.5" />
-                                    </g>
-                                    <text class="port-label" x="28" y="14">Input 1</text>
-                                </g>
-
-                                <g class="input-field" transform="translate(0, 100)">
-                                    <g class="port">
-                                        <circle class="port-outer" cx="15" cy="10" r="7.5" />
-                                        <circle class="port-inner" cx="15" cy="10" r="5" />
-                                        <circle class="port-scrim" cx="15" cy="10" r="7.5" />
-                                    </g>
-                                    <text class="port-label" x="28" y="14">Input 2</text>
-                                </g>
-
-
-
-                            </g>
-
-                            <g class="outputs">
-
-                                <g class="output-field" transform="translate(0, 55)">
-                                    <g class="port" data-clickable="false">
-                                        <circle class="port-outer" cx="189" cy="10" r="7.5" />
-                                        <circle class="port-inner" cx="189" cy="10" r="5" />
-                                        <circle class="port-scrim" cx="189" cy="10" r="7.5" data-clickable="false" />
-                                    </g>
-                                    <text class="port-label" x="176" y="14">Output</text>
-                                </g>
-
-                            </g>
-
-                        </g>
                     </g>
 
+                    <g class="outputs">
+
+                        <g class="output-field" transform="translate(0, 30)">
+                            <g class="port" data-clickable="false">
+                                <circle class="port-outer" cx="150" cy="10" r="7.5" />
+                                <circle class="port-inner" cx="150" cy="10" r="5" />
+                                <circle class="port-scrim" cx="150" cy="10" r="7.5" data-clickable="false" />
+                            </g>
+                        </g>
+
+                    </g>
 
                 </g>
-
-                <g id="connections-layer"></g>
-
-                <g class="connector">
-
-                    <path class="connector-path-outline" />
-                    <path class="connector-path" />
-
-                    <circle class="connector-handle input-handle" cx="0" cy="0" r="4" />
-                    <circle class="connector-handle output-handle" cx="0" cy="0" r="4" />
-                </g>
-
-                <circle id="drag-proxy" cx="0" cy="0" r="1" fill="none" />
             </g>
-        </svg>
-        <script src="https://cpwebassets.codepen.io/assets/common/stopExecutionOnTimeout-157cd5b220a5c80d4ff8e0e70ac069bffd87a61252088146915e8726e5d9f147.js"></script>
+            <g class="node-container">
+
+                <rect class="node-background" width="204" height="128" x="0" y="0" rx="6" ry="6" />
+                <path class="node-gate" transform="scale(3)" d="M28 26.094 C20.823999999999998 26.094 9 26.094 9 26.094 L9 0.09600000000000009 L28 0.0940000000000012 C35.176 0.0940000000000012 41 5.917999999999999 41 13.094000000000001 C41 20.270000000000003 35.176 26.094 28 26.094 Z M45 13.094000000000001 C45 14.198 44.10400000000001 15.094000000000001 43 15.094000000000001 C41.896 15.094000000000001 41 14.198 41 13.094000000000001 C41 11.989999999999998 41.896 11.094000000000001 43 11.094000000000001 C44.10400000000001 11.094000000000001 45 11.989999999999998 45 13.094000000000001 Z M45 13.094000000000001 L54 13.094000000000001 M0 6.594000000000001 L9 6.594000000000001 M0 19.594 L9 19.594" />
+
+                <g class="node-content">
 
 
-        <script src='https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.2/TweenMax.min.js'></script>
-        <script src='https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.2/utils/Draggable.min.js'></script>
-        <script src='/js/draganddrop.js'></script>
+                    <g class="inputs">
+
+                        <g class="input-field" transform="translate(0, 10)">
+                            <g class="port">
+                                <circle class="port-outer" cx="5" cy="10" r="7.5" />
+                                <circle class="port-inner" cx="5" cy="10" r="5" />
+                                <circle class="port-scrim" cx="5" cy="10" r="7.5" />
+                            </g>
+                        </g>
+
+                        <g class="input-field" transform="translate(0, 49)">
+                            <g class="port">
+                                <circle class="port-outer" cx="5" cy="10" r="7.5" />
+                                <circle class="port-inner" cx="5" cy="10" r="5" />
+                                <circle class="port-scrim" cx="5" cy="10" r="7.5" />
+                            </g>
+                        </g>
 
 
 
-        </body>
-    </html>
+                    </g>
+
+                    <g class="outputs">
+
+                        <g class="output-field" transform="translate(0, 30)">
+                            <g class="port" data-clickable="false">
+                                <circle class="port-outer" cx="160" cy="10" r="7.5" />
+                                <circle class="port-inner" cx="160" cy="10" r="5" />
+                                <circle class="port-scrim" cx="160" cy="10" r="7.5" data-clickable="false" />
+                            </g>
+                        </g>
+
+                    </g>
+
+                </g>
+            </g>
+            <g class="node-container">
+
+                <rect class="node-background" width="204" height="128" x="0" y="0" rx="6" ry="6" />
+                <path class="node-gate" transform="scale(3)" d="M7 1.0949999999999989 L7 1.1569999999999965 C9.199000000000002 4.971999999999994 10.469000000000001 9.378 10.469000000000001 14.094999999999999 C10.469000000000001 18.811000000000007 9.199000000000002 23.217 7 27.031999999999996 L7 27.095 L20.469 27.095 C30.079 27.095 38.469 21.855000000000004 42.969 14.094999999999999 C38.469 6.334000000000003 30.079 1.0949999999999989 20.469 1.0949999999999989 L7 1.0949999999999989 Z M43 14.094999999999999 L52 14.094999999999999 M0.5 7.594999999999999 L9.5 7.594999999999999 M0.5 20.595 L9.5 20.595" />
+
+                <g class="node-content">
+
+
+                    <g class="inputs">
+
+                        <g class="input-field" transform="translate(0, 13)">
+                            <g class="port">
+                                <circle class="port-outer" cx="5" cy="10" r="7.5" />
+                                <circle class="port-inner" cx="5" cy="10" r="5" />
+                                <circle class="port-scrim" cx="5" cy="10" r="7.5" />
+                            </g>
+                        </g>
+
+                        <g class="input-field" transform="translate(0, 51)">
+                            <g class="port">
+                                <circle class="port-outer" cx="5" cy="10" r="7.5" />
+                                <circle class="port-inner" cx="5" cy="10" r="5" />
+                                <circle class="port-scrim" cx="5" cy="10" r="7.5" />
+                            </g>
+                        </g>
+
+
+
+                    </g>
+
+                    <g class="outputs">
+
+                        <g class="output-field" transform="translate(0, 32)">
+                            <g class="port" data-clickable="false">
+                                <circle class="port-outer" cx="150" cy="10" r="7.5" />
+                                <circle class="port-inner" cx="150" cy="10" r="5" />
+                                <circle class="port-scrim" cx="150" cy="10" r="7.5" data-clickable="false" />
+                            </g>
+                        </g>
+
+                    </g>
+
+                </g>
+            </g>
+            <g class="node-container">
+
+                <rect class="node-background" width="204" height="128" x="0" y="0" rx="6" ry="6" />
+                <path class="node-gate" transform="scale(3)" d="M7 1.093999999999994 L7 1.1569999999999965 C9.198999999999998 4.971999999999994 10.468999999999994 9.378 10.468999999999994 14.093999999999994 C10.468999999999994 18.811000000000007 9.198999999999998 23.217 7 27.031999999999996 L7 27.093999999999994 L20.468999999999994 27.093999999999994 C30.078999999999994 27.093999999999994 38.468999999999994 21.855000000000004 42.968999999999994 14.093999999999994 C38.468999999999994 6.334000000000003 30.078999999999994 1.093999999999994 20.468999999999994 1.093999999999994 L7 1.093999999999994 Z M47 14.094999999999999 C47 15.198999999999998 46.10400000000001 16.095 45 16.095 C43.89599999999999 16.095 43 15.198999999999998 43 14.094999999999999 C43 12.991 43.89599999999999 12.094999999999999 45 12.094999999999999 C46.10400000000001 12.094999999999999 47 12.991 47 14.094999999999999 Z M47 14.093999999999994 L56 14.093999999999994 M0.5 7.593999999999994 L9.5 7.593999999999994 M0.5 20.593999999999994 L9.5 20.593999999999994" />
+
+                <g class="node-content">
+
+
+                    <g class="inputs">
+
+                        <g class="input-field" transform="translate(0, 13)">
+                            <g class="port">
+                                <circle class="port-outer" cx="5" cy="10" r="7.5" />
+                                <circle class="port-inner" cx="5" cy="10" r="5" />
+                                <circle class="port-scrim" cx="5" cy="10" r="7.5" />
+                            </g>
+                        </g>
+
+                        <g class="input-field" transform="translate(0, 52)">
+                            <g class="port">
+                                <circle class="port-outer" cx="5" cy="10" r="7.5" />
+                                <circle class="port-inner" cx="5" cy="10" r="5" />
+                                <circle class="port-scrim" cx="5" cy="10" r="7.5" />
+                            </g>
+                        </g>
+
+
+
+                    </g>
+
+                    <g class="outputs">
+
+                        <g class="output-field" transform="translate(15, 32)">
+                            <g class="port" data-clickable="false">
+                                <circle class="port-outer" cx="150" cy="10" r="7.5" />
+                                <circle class="port-inner" cx="150" cy="10" r="5" />
+                                <circle class="port-scrim" cx="150" cy="10" r="7.5" data-clickable="false" />
+                            </g>
+                        </g>
+
+                    </g>
+
+                </g>
+            </g>
+            <g class="node-container">
+
+                <rect class="node-background" width="204" height="128" x="0" y="0" rx="6" ry="6" />
+                <path class="node-gate" transform="scale(3)" d="M12 0.09399999999999409 L12 0.1570000000000107 C14.198999999999998 3.9720000000000084 15.469000000000001 8.377999999999986 15.469000000000001 13.093999999999994 C15.469000000000001 17.811000000000007 14.198999999999998 22.217000000000013 12 26.03200000000001 L12 26.093999999999994 L25.469 26.093999999999994 C35.079 26.093999999999994 43.469 20.85499999999999 47.968999999999994 13.093999999999994 C43.469 5.334000000000003 35.079 0.09399999999999409 25.469 0.09399999999999409 L12 0.09399999999999409 Z M7 0.1570000000000107 C9.199000000000002 3.9720000000000084 10.469000000000001 8.377999999999986 10.469000000000001 13.093999999999994 C10.469000000000001 17.811000000000007 9.199000000000002 22.217000000000013 7 26.03200000000001 M48 13.093999999999994 L57 13.093999999999994 M0.5 6.593999999999994 L9.5 6.593999999999994 M0.5 19.593999999999994 L9.5 19.593999999999994"/>
+
+                <g class="node-content">
+
+
+                    <g class="inputs">
+
+                        <g class="input-field" transform="translate(0, 10)">
+                            <g class="port">
+                                <circle class="port-outer" cx="5" cy="10" r="7.5" />
+                                <circle class="port-inner" cx="5" cy="10" r="5" />
+                                <circle class="port-scrim" cx="5" cy="10" r="7.5" />
+                            </g>
+                        </g>
+
+                        <g class="input-field" transform="translate(0, 49)">
+                            <g class="port">
+                                <circle class="port-outer" cx="5" cy="10" r="7.5" />
+                                <circle class="port-inner" cx="5" cy="10" r="5" />
+                                <circle class="port-scrim" cx="5" cy="10" r="7.5" />
+                            </g>
+                        </g>
+
+
+
+                    </g>
+
+                    <g class="outputs">
+
+                        <g class="output-field" transform="translate(15, 29)">
+                            <g class="port" data-clickable="false">
+                                <circle class="port-outer" cx="150" cy="10" r="7.5" />
+                                <circle class="port-inner" cx="150" cy="10" r="5" />
+                                <circle class="port-scrim" cx="150" cy="10" r="7.5" data-clickable="false" />
+                            </g>
+                        </g>
+
+                    </g>
+
+                </g>
+            </g>
+            <g class="node-container">
+
+                <rect class="node-background" width="204" height="128" x="0" y="0" rx="6" ry="6" />
+                <path class="node-gate" transform="scale(3)" d="M12 0.09399999999999409 L12 0.1570000000000107 C14.198999999999998 3.9720000000000084 15.468999999999994 8.377999999999986 15.468999999999994 13.093999999999994 C15.468999999999994 17.811000000000007 14.198999999999998 22.217000000000013 12 26.03200000000001 L12 26.093999999999994 L25.468999999999994 26.093999999999994 C35.07899999999999 26.093999999999994 43.468999999999994 20.85499999999999 47.968999999999994 13.093999999999994 C43.468999999999994 5.334000000000003 35.07899999999999 0.09399999999999409 25.468999999999994 0.09399999999999409 L12 0.09399999999999409 Z M7 0.1570000000000107 C9.198999999999998 3.9720000000000084 10.468999999999994 8.377999999999986 10.468999999999994 13.093999999999994 C10.468999999999994 17.811000000000007 9.198999999999998 22.217000000000013 7 26.03200000000001 M52 13.094999999999999 C52 14.199000000000012 51.10400000000001 15.094999999999999 50 15.094999999999999 C48.89599999999999 15.094999999999999 48 14.199000000000012 48 13.094999999999999 C48 11.991000000000014 48.89599999999999 11.094999999999999 50 11.094999999999999 C51.10400000000001 11.094999999999999 52 11.991000000000014 52 13.094999999999999 Z M52 13.094999999999999 L61 13.094999999999999 M0.5 6.593999999999994 L9.5 6.593999999999994 M0.5 19.593999999999994 L9.5 19.593999999999994"/>
+
+                <g class="node-content">
+
+
+                    <g class="inputs">
+
+                        <g class="input-field" transform="translate(0, 10)">
+                            <g class="port">
+                                <circle class="port-outer" cx="5" cy="10" r="7.5" />
+                                <circle class="port-inner" cx="5" cy="10" r="5" />
+                                <circle class="port-scrim" cx="5" cy="10" r="7.5" />
+                            </g>
+                        </g>
+
+                        <g class="input-field" transform="translate(0, 49)">
+                            <g class="port">
+                                <circle class="port-outer" cx="5" cy="10" r="7.5" />
+                                <circle class="port-inner" cx="5" cy="10" r="5" />
+                                <circle class="port-scrim" cx="5" cy="10" r="7.5" />
+                            </g>
+                        </g>
+
+
+
+                    </g>
+
+                    <g class="outputs">
+
+                        <g class="output-field" transform="translate(30, 29)">
+                            <g class="port" data-clickable="false">
+                                <circle class="port-outer" cx="150" cy="10" r="7.5" />
+                                <circle class="port-inner" cx="150" cy="10" r="5" />
+                                <circle class="port-scrim" cx="150" cy="10" r="7.5" data-clickable="false" />
+                            </g>
+                        </g>
+
+                    </g>
+
+                </g>
+            </g>
+            <g class="node-container">
+
+                <rect class="node-background" width="204" height="128" x="0" y="0" rx="6" ry="6" />
+                <path class="node-gate" transform="scale(3)" d="M32.5 12.093999999999994 C32.5 13.198000000000008 31.604 14.093999999999994 30.5 14.093999999999994 C29.396 14.093999999999994 28.5 13.198000000000008 28.5 12.093999999999994 C28.5 10.990000000000009 29.396 10.093999999999994 30.5 10.093999999999994 C31.604 10.093999999999994 32.5 10.990000000000009 32.5 12.093999999999994 Z M9 23.093999999999994 L9 1.093999999999994 L27.985999999999997 12.093999999999994 L9 23.093999999999994 Z M32.5 12.093999999999994 L41.5 12.093999999999994 M0 12.093999999999994 L9 12.093999999999994"/>
+
+                <g class="node-content">
+
+
+                    <g class="inputs">
+                        <g class="input-field" transform="translate(0, 26)">
+                            <g class="port">
+                                <circle class="port-outer" cx="5" cy="10" r="7.5" />
+                                <circle class="port-inner" cx="5" cy="10" r="5" />
+                                <circle class="port-scrim" cx="5" cy="10" r="7.5" />
+                            </g>
+                        </g>
+
+
+
+                    </g>
+
+                    <g class="outputs">
+
+                        <g class="output-field" transform="translate(0, 26)">
+                            <g class="port" data-clickable="false">
+                                <circle class="port-outer" cx="130" cy="10" r="7.5" />
+                                <circle class="port-inner" cx="130" cy="10" r="5" />
+                                <circle class="port-scrim" cx="130" cy="10" r="7.5" data-clickable="false" />
+                            </g>
+                        </g>
+
+                    </g>
+
+                </g>
+            </g>
+
+
+        </g>
+
+        <g id="connections-layer"></g>
+
+        <g class="connector">
+
+            <path class="connector-path-outline" />
+            <path class="connector-path" />
+
+            <circle class="connector-handle input-handle" cx="0" cy="0" r="4" />
+            <circle class="connector-handle output-handle" cx="0" cy="0" r="4" />
+        </g>
+
+        <circle id="drag-proxy" cx="0" cy="0" r="1" fill="none" />
+    </g>
+</svg>
+<script src="https://cpwebassets.codepen.io/assets/common/stopExecutionOnTimeout-157cd5b220a5c80d4ff8e0e70ac069bffd87a61252088146915e8726e5d9f147.js"></script>
+
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.2/TweenMax.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.2/utils/Draggable.min.js'></script>
+<script src='/js/draganddrop.js'></script>
+
+
+
+
+</body>
+</html>

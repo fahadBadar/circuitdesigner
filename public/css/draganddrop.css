@@ -16,17 +16,18 @@ body {
 }
 
 .node-background {
-    fill: #1a1c1d;
+    fill: #ffffff;
 }
 
-.node-header {
-    fill: #1a1c1d;
+
+
+.node-gate {
+    fill: none;
+    fill-rule: nonzero;
+    stroke: black;
+    stroke-width: 1px;
 }
-.node-header .header-title {
-    font-size: 20px;
-    fill: #fff;
-    text-anchor: middle;
-}
+
 
 .node-content {
     fill: #1a1c1d;
@@ -76,4 +77,19 @@ body {
     stroke: #333;
     stroke-width: 6;
     fill: none;
+}
+body {
+    padding: 20px;
+}
+button {
+    padding-top: 20px;
+    margin-top: 20px;
+    line-height: 60px;
+    font-weight: bold;
+    padding: 0 40px;
+    background: lightgrey;
+    border: none;
+}
+button:hover {
+    background: grey;
 }

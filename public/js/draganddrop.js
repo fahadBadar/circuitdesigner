@@ -1,6 +1,7 @@
 SVGElement.prototype.getTransformToElement = SVGElement.prototype.getTransformToElement || function (toElement) {
     return toElement.getScreenCTM().inverse().multiply(this.getScreenCTM());
 };
+// This a polyfill. If a feature isn't supported in a browser then this will provide a workaround or patch for it.
 
 //
 // CONNECTOR
@@ -8,40 +9,41 @@ SVGElement.prototype.getTransformToElement = SVGElement.prototype.getTransformTo
 class Connector {
 
     constructor() {
-
+        //defines all the variables
         this.id = `connector_${++nextUid}`;
-        this.dragType = "connector";
+        this.dragType = "connector";//weather it is a connector or a gate
         this.isSelected = false;
         this.element = connectorElement.cloneNode(true);
         this.path = this.element.querySelector(".connector-path");
         this.pathOutline = this.element.querySelector(".connector-path-outline");
-        this.inputHandle = this.element.querySelector(".input-handle");
+        this.inputHandle = this.element.querySelector(".input-handle");//differentiate between inputs and outputs so a path can only be drawn through oppposites
         this.outputHandle = this.element.querySelector(".output-handle");
     }
 
     init(port) {
 
-        connectorLayer.appendChild(this.element);
+        connectorLayer.appendChild(this.element);// adds an element to the end of a list of elements this being a port
 
         this.isInput = port.isInput;
 
-        if (port.isInput) {
+        if (port.isInput) {//if it is an input port
             this.inputPort = port;
-            this.dragElement = this.outputHandle;
-            this.staticElement = this.inputHandle;
-        } else {
-            this.outputPort = port;
-            this.dragElement = this.inputHandle;
-            this.staticElement = this.outputHandle;
+            this.dragElement = this.outputHandle;//it will receive from the output
+            this.staticElement = this.inputHandle;//and wont receive from another input
+        } else {//otherwise
+            this.outputPort = port;//it has to be an output port
+            this.dragElement = this.inputHandle;//it will receive from an input
+            this.staticElement = this.outputHandle;// and not another output
         }
 
         this.staticPort = port;
         this.dragElement.setAttribute("data-drag", `${this.id}:connector`);
         this.staticElement.setAttribute("data-drag", `${port.id}:port`);
+        //applies the attributes to the corresponding port/connector
 
         TweenLite.set([this.inputHandle, this.outputHandle], {
             x: port.global.x,
-            y: port.global.y });
+            y: port.global.y });//drag the path from input to output
 
 
 
@@ -49,13 +51,13 @@ class Connector {
 
     updatePath() {
 
-        const x1 = this.inputHandle._gsTransform.x;
-        const y1 = this.inputHandle._gsTransform.y;
+        const x1 = this.inputHandle._gsTransform.x;//x co-ordinate of the input port
+        const y1 = this.inputHandle._gsTransform.y;//y co-ordinate of the input port
 
-        const x4 = this.outputHandle._gsTransform.x;
-        const y4 = this.outputHandle._gsTransform.y;
+        const x4 = this.outputHandle._gsTransform.x;//x co-ordinate of the output port
+        const y4 = this.outputHandle._gsTransform.y;//y co-ordinate of the output port
 
-        const dx = Math.abs(x1 - x4) * bezierWeight;
+        const dx = Math.abs(x1 - x4) * bezierWeight;//the absolute (positive) value of the difference between the two ports lengthwise * curve intensity
 
         const p1x = x1;
         const p1y = y1;
@@ -68,20 +70,22 @@ class Connector {
 
         const p3x = x4 + dx;
         const p3y = y4;
+        //the constants are reassigned so the original value isn't changed
 
-        const data = `M${p1x} ${p1y} C ${p2x} ${p2y} ${p3x} ${p3y} ${p4x} ${p4y}`;
+        const data = `M${p1x} ${p1y} C ${p2x} ${p2y} ${p3x} ${p3y} ${p4x} ${p4y}`;//array of position to draw  path
 
         this.path.setAttribute("d", data);
         this.pathOutline.setAttribute("d", data);
+        //the information above is then passed to the method that draws the paths
     }
 
     updateHandle(port) {
 
         if (port === this.inputPort) {
 
-            TweenLite.set(this.inputHandle, {
-                x: port.global.x,
-                y: port.global.y });
+            TweenLite.set(this.inputHandle, {//input handle is the thing that is being changed
+                x: port.global.x, //from input
+                y: port.global.y });//to output draw path
 
 
         } else if (port === this.outputPort) {
@@ -101,20 +105,20 @@ class Connector {
 
         let hitPort;
 
-        for (let shape of shapes) {
+        for (let shape of shapes) {//for each shape
 
-            if (shape.element === skipShape) {
+            if (shape.element === skipShape) {// if the element is the same data type as skipShape then continue
                 continue;
             }
 
-            if (Draggable.hitTest(this.dragElement, shape.element)) {
+            if (Draggable.hitTest(this.dragElement, shape.element)) {//if it is on screen
 
                 const ports = this.isInput ? shape.outputs : shape.inputs;
 
-                for (let port of ports) {
+                for (let port of ports) {//for each port
 
-                    if (Draggable.hitTest(this.dragElement, port.portElement)) {
-                        hitPort = port;
+                    if (Draggable.hitTest(this.dragElement, port.portElement)) {//if the dragged path is over another port
+                        hitPort = port;//connect the two ports
                         break;
                     }
                 }
@@ -135,7 +139,7 @@ class Connector {
 
             this.dragElement.setAttribute("data-drag", `${hitPort.id}:port`);
 
-            hitPort.addConnector(this);
+            hitPort.addConnector(this);//push a
             this.updateHandle(hitPort);
 
         } else {
@@ -168,14 +172,14 @@ class Connector {
 
         connectorLayer.removeChild(this.element);
         connectorPool.push(this);
-    }
+    }//clears all variables so it can move on to he next connector
 
     onDrag() {
-        this.updatePath();
+        this.updatePath();//while dragging keep updating the path
     }
 
     onDragEnd() {
-        this.placeHandle();
+        this.placeHandle();//then stop when the user stops dragging
     }}
 
 
@@ -186,14 +190,14 @@ class NodePort {
 
     constructor(parentNode, element, isInput) {
 
-        this.id = `port_${++nextUid}`;
+        this.id = `port_${++nextUid}`;//set the id to the id given in the html
         this.dragType = "port";
 
         this.parentNode = parentNode;
         this.isInput = isInput;
 
         this.element = element;
-        this.portElement = element.querySelector(".port");
+        this.portElement = element.querySelector(".port");//
         this.portScrim = element.querySelector(".port-scrim");
 
         this.portScrim.setAttribute("data-drag", `${this.id}:port`);
@@ -201,7 +205,7 @@ class NodePort {
         this.connectors = [];
         this.lastConnector;
 
-        const bbox = this.portElement.getBBox();
+        const bbox = this.portElement.getBBox();//get the smallest space in which this element fits and return the co-ordinates
 
         this.global = svg.createSVGPoint();
         this.center = svg.createSVGPoint();
@@ -215,9 +219,9 @@ class NodePort {
 
         let connector;
 
-        if (connectorPool.length) {
-            connector = connectorPool.pop();
-            connectorLookup[connector.id] = connector;
+        if (connectorPool.length) {//check if the list of connectors is empty
+            connector = connectorPool.pop();//if not assign the first connector in the list to the variable "connector"
+            connectorLookup[connector.id] = connector;//find a an id that matches the connector name
         } else {
             connector = new Connector();
         }
@@ -307,10 +311,10 @@ class Diagram {
 
         this.dragElement = this.element = diagramElement;
 
-        shapeElements.forEach((element, i) => {
-            const shape = new NodeShape(element, 50 + i * 250, 50);
-            shapeLookup[shape.id] = shape;
-            shapes.push(shape);
+        shapeElements.forEach((element, i) => {//for each element
+            const shape = new NodeShape(element, 50 , 50 + i * 100);// create a new shape and stagger the location of the shapes so they are side by side
+            shapeLookup[shape.id] = shape;//find the shape
+            shapes.push(shape);// and add anything else to the shape
         });
 
         this.target = null;
@@ -340,7 +344,7 @@ class Diagram {
 
         while (!(drag = element.getAttribute("data-drag")) && element !== svg) {if (window.CP.shouldStopExecution(0)) break;
             element = element.parentNode;
-        }window.CP.exitedLoop(0);
+        }window.CP.exitedLoop(0);//error checker
 
         drag = drag || "diagram:diagram";
         const split = drag.split(":");
@@ -373,7 +377,7 @@ class Diagram {
 
         TweenLite.set(this.target.dragElement, {
             x: `+=${this.draggable.deltaX}`,
-            y: `+=${this.draggable.deltaY}` });
+            y: `+=${this.draggable.deltaY}` });//method that drags the whole logic gate
 
 
         this.target.onDrag && this.target.onDrag();
@@ -383,9 +387,12 @@ class Diagram {
 //
 // APP
 // ===========================================================================
+
+//
+
 let nextUid = 0;
 
-const bezierWeight = 0.675;
+const bezierWeight = 0.675;//shape of the path
 
 const svg = document.querySelector("#svg");
 const diagramElement = document.querySelector("#diagram");
@@ -394,8 +401,8 @@ const shapeLookup = {};
 const portLookup = {};
 const connectorLookup = {};
 
-const ports = [];
-const shapes = [];
+const ports = [];//port stack
+const shapes = [];//shape stack
 const connectorPool = [];
 
 const dragProxy = document.querySelector("#drag-proxy");
@@ -407,4 +414,3 @@ const connectorElement = frag.querySelector(".connector");
 const connectorLayer = document.querySelector("#connections-layer");
 
 const diagram = new Diagram();
-//# sourceURL=pen.js
