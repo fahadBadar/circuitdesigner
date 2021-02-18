@@ -85,6 +85,9 @@ class Connector {
 
     }
 
+    /*
+    Keeps the path connected to the port while the logic gates are being moved
+     */
     updateHandle(port) {
 
         // Starts the connector drag animation
@@ -125,7 +128,7 @@ class Connector {
 
                 // Check if the connection overlaps a port on one of the gates
                 for (let port of ports) {
-                    if (Draggable.hitTest(this.dragElement, port.portElement)) { // Checks if the port and the path are overlapping
+                    if (Draggable.hitTest(this.dragElement, port.portElement)) {
                         hitPort = port;
                         break;
                     }
@@ -157,10 +160,12 @@ class Connector {
         }
     }
 
-    // Removes the path if it is dragged and not connected to a port
+    /*
+     Removes the path if it is dragged and not connected to a port
+     */
     remove() {
 
-        // Removes the drawn path from the array
+        // Removes the connector from the identified port
         if (this.inputPort) {
             this.inputPort.removeConnector(this);
         }
@@ -171,11 +176,11 @@ class Connector {
 
         this.isSelected = false;
 
-        // Removes the SVG element with the name "d"
+        // Removes the referenced SVG element from the identified port
         this.path.removeAttribute("d");
         this.pathOutline.removeAttribute("d");
 
-        // Removes the element with the name "data-drag"
+
         this.dragElement.removeAttribute("data-drag");
         this.staticElement.removeAttribute("data-drag");
 
@@ -185,14 +190,19 @@ class Connector {
         this.dragElement = null;
         this.staticElement = null;
 
-        connectorLayer.removeChild(this.element);
+        connectorLayer.removeChild(this.element); // Removes the newly created SVG connection from the diagram
         connectorPool.push(this);
     }
 
+    /*
+    Draw the path continuously while the connection is being dragged
+     */
     onDrag() {
         this.updatePath();
     }
-
+    /*
+    Place the connector on the port once the connection is no longer being dragged
+     */
     onDragEnd() {
         this.placeHandle();
     }}
@@ -212,7 +222,7 @@ class NodePort {
         this.isInput = isInput;
 
         this.element = element;
-        this.portElement = element.querySelector(".port");//
+        this.portElement = element.querySelector(".port");
         this.portScrim = element.querySelector(".port-scrim");
 
         this.portScrim.setAttribute("data-drag", `${this.id}:port`);
@@ -220,7 +230,7 @@ class NodePort {
         this.connectors = [];
         this.lastConnector;
 
-        const bbox = this.portElement.getBBox(); // get the smallest space in which this element fits and return the co-ordinates
+        const bbox = this.portElement.getBBox(); // Get the smallest rectangle in which this element fits and return the co-ordinates
 
         this.global = svg.createSVGPoint();
         this.center = svg.createSVGPoint();
@@ -234,9 +244,9 @@ class NodePort {
 
         let connector;
 
-        if (connectorPool.length) {//check if the list of connectors is empty
-            connector = connectorPool.pop();//if not assign the first connector in the list to the variable "connector"
-            connectorLookup[connector.id] = connector;//find a an id that matches the connector name
+        if (connectorPool.length) {
+            connector = connectorPool.pop();
+            connectorLookup[connector.id] = connector;
         } else {
             connector = new Connector();
         }
@@ -248,7 +258,6 @@ class NodePort {
 
     removeConnector(connection) {
 
-        // Determines the location of the connection in the array and removes it.
         const index = this.connectors.indexOf(connection);
 
         if (index > -1) {
@@ -260,7 +269,7 @@ class NodePort {
         this.connectors.push(connection);
     }
 
-    update() {//moves connector path as the gate is being moved
+    update() {
 
         const transform = this.portElement.getTransformToElement(diagramElement);
         this.global = this.center.matrixTransform(transform);
@@ -326,17 +335,15 @@ class Diagram {
     constructor() {
 
         this.dragElement = this.element = diagramElement;
-
-        shapeElements.forEach((element, i) => {//for each element
-            const shape = new NodeShape(element, 50 , 50 + i * 100);// create a new shape and stagger the location of the shapes so they are side by side
-            shapeLookup[shape.id] = shape;//find the shape
-            gates.push(shape);// and add anything else to the shape
+        shapeElements.forEach((element, i) => {
+            const shape = new NodeShape(element, 50 , 50 + i * 100);
+            shapeLookup[shape.id] = shape;
+            gates.push(shape);
         });
 
         this.target = null;
         this.dragType = null;
 
-        //enables dragging
         this.dragTarget = this.dragTarget.bind(this);
         this.prepareTarget = this.prepareTarget.bind(this);
         this.stopDragging = this.stopDragging.bind(this);
@@ -361,7 +368,7 @@ class Diagram {
 
         while (!(drag = element.getAttribute("data-drag")) && element !== svg) {if (window.CP.shouldStopExecution(0)) break;
             element = element.parentNode;
-        }window.CP.exitedLoop(0);//error checker
+        }window.CP.exitedLoop(0);
 
         drag = drag || "diagram:diagram";
         const split = drag.split(":");
@@ -394,7 +401,7 @@ class Diagram {
 
         TweenLite.set(this.target.dragElement, {
             x: `+=${this.draggable.deltaX}`,
-            y: `+=${this.draggable.deltaY}` });//method that drags the whole logic gate
+            y: `+=${this.draggable.deltaY}` });
 
 
         this.target.onDrag && this.target.onDrag();
@@ -404,10 +411,6 @@ class Diagram {
 //
 // APP
 // ===========================================================================
-
-//
-
-
 
 let nextUid = 0;
 
