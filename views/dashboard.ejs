@@ -18,7 +18,9 @@
 <h1>Dashboard</h1>
 <h1>Hello <%= username %></h1>
 <a href="/users/logout">logout</a>
+<button class="And Gate">And Gate
 
+</button>
 <script>
     let button = document.createElement("button");
     button.innerHTML = "AND GATE";
@@ -26,6 +28,7 @@
     body.appendChild(button);
     button.addEventListener ("click", function() {
         //create gate and give co-ordinates
+        console.log("BUTTON");
 
 
     });
@@ -341,6 +344,7 @@
 
         <g id="connections-layer"></g>
 
+        <!-- Serves as a connection template -->
         <g class="connector">
 
             <path class="connector-path-outline" />

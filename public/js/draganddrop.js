@@ -1,63 +1,68 @@
+// This a polyfill. If a feature isn't supported in a browser then this will provide a workaround or patch for it.
 SVGElement.prototype.getTransformToElement = SVGElement.prototype.getTransformToElement || function (toElement) {
     return toElement.getScreenCTM().inverse().multiply(this.getScreenCTM());
 };
-// This a polyfill. If a feature isn't supported in a browser then this will provide a workaround or patch for it.
 
-//
-// CONNECTOR
-// ===========================================================================
+/*
+
+ */
 class Connector {
 
     constructor() {
-        //defines all the variables
-        this.id = `connector_${++nextUid}`;
-        this.dragType = "connector";//weather it is a connector or a gate
-        this.isSelected = false;
-        this.element = connectorElement.cloneNode(true);
-        this.path = this.element.querySelector(".connector-path");
-        this.pathOutline = this.element.querySelector(".connector-path-outline");
-        this.inputHandle = this.element.querySelector(".input-handle");//differentiate between inputs and outputs so a path can only be drawn through oppposites
-        this.outputHandle = this.element.querySelector(".output-handle");
+        this.id = `connector_${++nextUid}`; // The id attribute uniquely identifies a connection in the diagram
+        this.dragType = "connector";        // Identifies this instance as a connector for dragging and dropping
+        this.isSelected = false;            // Todo: To be used later for selecting and removing a connector
+        this.element = connectorElement.cloneNode(true); // Uses the connector template to create a new SVG connector
+        this.path = this.element.querySelector(".connector-path"); // References to the connector path SVG element, used to draw the line
+        this.pathOutline = this.element.querySelector(".connector-path-outline"); // References to the connector path outline SVG element, used to draw the outline
+        this.inputHandle = this.element.querySelector(".input-handle"); // References to the input handle of the connector
+        this.outputHandle = this.element.querySelector(".output-handle"); // References to the output handle of the connector
     }
 
+    /*
+    Initialising the connection
+     */
     init(port) {
-
-        connectorLayer.appendChild(this.element);// adds an element to the end of a list of elements this being a port
-
+        connectorLayer.appendChild(this.element); // Adding a newly created SVG connection to the diagram
         this.isInput = port.isInput;
 
-        if (port.isInput) {//if it is an input port
+        // Determines which part of the connector to hold in place and which part to drag:
+        if (port.isInput) {
             this.inputPort = port;
-            this.dragElement = this.outputHandle;//it will receive from the output
-            this.staticElement = this.inputHandle;//and wont receive from another input
-        } else {//otherwise
-            this.outputPort = port;//it has to be an output port
-            this.dragElement = this.inputHandle;//it will receive from an input
-            this.staticElement = this.outputHandle;// and not another output
+            this.dragElement = this.outputHandle;
+            this.staticElement = this.inputHandle;
+        } else {
+            this.outputPort = port;
+            this.dragElement = this.inputHandle;
+            this.staticElement = this.outputHandle;
         }
-
+        5
         this.staticPort = port;
+
+        // Todo: Describe the significance of the data-drag attributes that I am setting here
         this.dragElement.setAttribute("data-drag", `${this.id}:connector`);
         this.staticElement.setAttribute("data-drag", `${port.id}:port`);
-        //applies the attributes to the corresponding port/connector
 
+        // Setup the connector drag animation
         TweenLite.set([this.inputHandle, this.outputHandle], {
             x: port.global.x,
-            y: port.global.y });//drag the path from input to output
-
-
-
+            y: port.global.y });
     }
 
+    /*
+    Calculates the path between two logic gates representing a connection and updates the SVG path to draw a bezier curved line.
+     */
     updatePath() {
 
-        const x1 = this.inputHandle._gsTransform.x;//x co-ordinate of the input port
-        const y1 = this.inputHandle._gsTransform.y;//y co-ordinate of the input port
+        // Calculates the co-ordinates for input and output handles
+        const x1 = this.inputHandle._gsTransform.x;
+        const y1 = this.inputHandle._gsTransform.y;
 
-        const x4 = this.outputHandle._gsTransform.x;//x co-ordinate of the output port
-        const y4 = this.outputHandle._gsTransform.y;//y co-ordinate of the output port
+        const x4 = this.outputHandle._gsTransform.x;
+        const y4 = this.outputHandle._gsTransform.y;
 
-        const dx = Math.abs(x1 - x4) * bezierWeight;//the absolute (positive) value of the difference between the two ports lengthwise * curve intensity
+        // Multiply the curve intensity by the difference between the input and output ports of two gates
+        const dx = Math.abs(x1 - x4) * bezierWeight;
 
         const p1x = x1;
         const p1y = y1;
@@ -70,22 +75,24 @@ class Connector {
 
         const p3x = x4 + dx;
         const p3y = y4;
-        //the constants are reassigned so the original value isn't changed
 
-        const data = `M${p1x} ${p1y} C ${p2x} ${p2y} ${p3x} ${p3y} ${p4x} ${p4y}`;//array of position to draw  path
+        // Plot the path after calculating the four co-ordinates
+        const data = `M${p1x} ${p1y} C ${p2x} ${p2y} ${p3x} ${p3y} ${p4x} ${p4y}`;
 
+        // Draw the connection using the referenced SVG path
         this.path.setAttribute("d", data);
         this.pathOutline.setAttribute("d", data);
-        //the information above is then passed to the method that draws the paths
+
     }
 
     updateHandle(port) {
 
+        // Starts the connector drag animation
         if (port === this.inputPort) {
 
-            TweenLite.set(this.inputHandle, {//input handle is the thing that is being changed
-                x: port.global.x, //from input
-                y: port.global.y });//to output draw path
+            TweenLite.set(this.inputHandle, {
+                x: port.global.x,
+                y: port.global.y });
 
 
         } else if (port === this.outputPort) {
@@ -99,36 +106,39 @@ class Connector {
         this.updatePath();
     }
 
+    /*
+    Checks weather the path drawn has connected to the port, if the port and the path overlap then places the connection in the port
+    */
     placeHandle() {
-
         const skipShape = this.staticPort.parentNode.element;
-
         let hitPort;
 
-        for (let shape of shapes) {//for each shape
-
-            if (shape.element === skipShape) {// if the element is the same data type as skipShape then continue
+        // Go through all the gates to check if the connection falls on one of their inputs or outputs:
+        for (let gate of gates) {
+            if (gate.element === skipShape) {
                 continue;
             }
 
-            if (Draggable.hitTest(this.dragElement, shape.element)) {//if it is on screen
+            // Check if the connection overlaps one of the gates
+            if (Draggable.hitTest(this.dragElement, gate.element)) {
+                const ports = this.isInput ? gate.outputs : gate.inputs;
 
-                const ports = this.isInput ? shape.outputs : shape.inputs;
-
-                for (let port of ports) {//for each port
-
-                    if (Draggable.hitTest(this.dragElement, port.portElement)) {//if the dragged path is over another port
-                        hitPort = port;//connect the two ports
+                // Check if the connection overlaps a port on one of the gates
+                for (let port of ports) {
+                    if (Draggable.hitTest(this.dragElement, port.portElement)) { // Checks if the port and the path are overlapping
+                        hitPort = port;
                         break;
                     }
                 }
 
+                // Break out of the loop if a port has been identified
                 if (hitPort) {
                     break;
                 }
             }
         }
 
+        // If a port has been identified then add this connector to the port and redraw the path
         if (hitPort) {
 
             if (this.isInput) {
@@ -139,16 +149,18 @@ class Connector {
 
             this.dragElement.setAttribute("data-drag", `${hitPort.id}:port`);
 
-            hitPort.addConnector(this);//push a
-            this.updateHandle(hitPort);
+            hitPort.addConnector(this); // Add this connector to the identified port
+            this.updateHandle(hitPort); // Redraw the connection to this port
 
-        } else {
+        } else { // If a port has not been identified then remove the connection
             this.remove();
         }
     }
 
+    // Removes the path if it is dragged and not connected to a port
     remove() {
 
+        // Removes the drawn path from the array
         if (this.inputPort) {
             this.inputPort.removeConnector(this);
         }
@@ -159,8 +171,11 @@ class Connector {
 
         this.isSelected = false;
 
+        // Removes the SVG element with the name "d"
         this.path.removeAttribute("d");
         this.pathOutline.removeAttribute("d");
+
+        // Removes the element with the name "data-drag"
         this.dragElement.removeAttribute("data-drag");
         this.staticElement.removeAttribute("data-drag");
 
@@ -172,14 +187,14 @@ class Connector {
 
         connectorLayer.removeChild(this.element);
         connectorPool.push(this);
-    }//clears all variables so it can move on to he next connector
+    }
 
     onDrag() {
-        this.updatePath();//while dragging keep updating the path
+        this.updatePath();
     }
 
     onDragEnd() {
-        this.placeHandle();//then stop when the user stops dragging
+        this.placeHandle();
     }}
 
 
@@ -190,7 +205,7 @@ class NodePort {
 
     constructor(parentNode, element, isInput) {
 
-        this.id = `port_${++nextUid}`;//set the id to the id given in the html
+        this.id = `port_${++nextUid}`;
         this.dragType = "port";
 
         this.parentNode = parentNode;
@@ -205,7 +220,7 @@ class NodePort {
         this.connectors = [];
         this.lastConnector;
 
-        const bbox = this.portElement.getBBox();//get the smallest space in which this element fits and return the co-ordinates
+        const bbox = this.portElement.getBBox(); // get the smallest space in which this element fits and return the co-ordinates
 
         this.global = svg.createSVGPoint();
         this.center = svg.createSVGPoint();
@@ -233,6 +248,7 @@ class NodePort {
 
     removeConnector(connection) {
 
+        // Determines the location of the connection in the array and removes it.
         const index = this.connectors.indexOf(connection);
 
         if (index > -1) {
@@ -244,7 +260,7 @@ class NodePort {
         this.connectors.push(connection);
     }
 
-    update() {
+    update() {//moves connector path as the gate is being moved
 
         const transform = this.portElement.getTransformToElement(diagramElement);
         this.global = this.center.matrixTransform(transform);
@@ -314,12 +330,13 @@ class Diagram {
         shapeElements.forEach((element, i) => {//for each element
             const shape = new NodeShape(element, 50 , 50 + i * 100);// create a new shape and stagger the location of the shapes so they are side by side
             shapeLookup[shape.id] = shape;//find the shape
-            shapes.push(shape);// and add anything else to the shape
+            gates.push(shape);// and add anything else to the shape
         });
 
         this.target = null;
         this.dragType = null;
 
+        //enables dragging
         this.dragTarget = this.dragTarget.bind(this);
         this.prepareTarget = this.prepareTarget.bind(this);
         this.stopDragging = this.stopDragging.bind(this);
@@ -390,6 +407,8 @@ class Diagram {
 
 //
 
+
+
 let nextUid = 0;
 
 const bezierWeight = 0.675;//shape of the path
@@ -402,7 +421,7 @@ const portLookup = {};
 const connectorLookup = {};
 
 const ports = [];//port stack
-const shapes = [];//shape stack
+const gates = [];//shape stack
 const connectorPool = [];
 
 const dragProxy = document.querySelector("#drag-proxy");
@@ -414,3 +433,4 @@ const connectorElement = frag.querySelector(".connector");
 const connectorLayer = document.querySelector("#connections-layer");
 
 const diagram = new Diagram();
+
