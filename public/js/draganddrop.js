@@ -117,7 +117,7 @@ class Connector {
         let hitPort;
 
         // Go through all the gates to check if the connection falls on one of their inputs or outputs:
-        for (let gate of gates) {
+        for (let gate of circuitShapes) {
             if (gate.element === skipShape) {
                 continue;
             }
@@ -161,7 +161,9 @@ class Connector {
     }
 
     /*
-     Removes the path if it is dragged and not connected to a port
+     Removes the path
+     Currently is called if a path is drawn and not connected to a port.
+     Later I will use this method to remove an existing path if requested by the user
      */
     remove() {
 
@@ -191,15 +193,16 @@ class Connector {
         this.staticElement = null;
 
         connectorLayer.removeChild(this.element); // Removes the newly created SVG connection from the diagram
-        connectorPool.push(this);
+        connectorPool.push(this); // Put the connector back into the pool so it can be reused
     }
 
     /*
-    Draw the path continuously while the connection is being dragged
+    Draw the path continuously while the connector is being dragged
      */
     onDrag() {
         this.updatePath();
     }
+
     /*
     Place the connector on the port once the connection is no longer being dragged
      */
@@ -207,11 +210,10 @@ class Connector {
         this.placeHandle();
     }}
 
-
-//
-// NODE PORT
-// ===========================================================================
-class NodePort {
+/*
+Represents an input or output connection port of a logic gate
+ */
+class ShapePort {
 
     constructor(parentNode, element, isInput) {
 
@@ -241,9 +243,9 @@ class NodePort {
     }
 
     createConnector() {
-
         let connector;
 
+        // If there is already a connector in the pool it will reuse it to prevent needless use of browser memory
         if (connectorPool.length) {
             connector = connectorPool.pop();
             connectorLookup[connector.id] = connector;
@@ -257,7 +259,6 @@ class NodePort {
     }
 
     removeConnector(connection) {
-
         const index = this.connectors.indexOf(connection);
 
         if (index > -1) {
@@ -269,8 +270,10 @@ class NodePort {
         this.connectors.push(connection);
     }
 
+    /*
+    Update all connections connected to this port
+     */
     update() {
-
         const transform = this.portElement.getTransformToElement(diagramElement);
         this.global = this.center.matrixTransform(transform);
 
@@ -279,14 +282,12 @@ class NodePort {
         }
     }}
 
-
-//
-// NODE SHAPE
-// ===========================================================================
-class NodeShape {
+/*
+Represents a logic gate
+ */
+class CircuitShape {
 
     constructor(element, x, y) {
-
         this.id = `shape_${++nextUid}`;
         this.dragType = "shape";
 
@@ -301,20 +302,24 @@ class NodeShape {
         const outputElements = Array.from(element.querySelectorAll(".output-field"));
 
         this.inputs = inputElements.map(element => {
-            const port = new NodePort(this, element, true);
+            const port = new ShapePort(this, element, true);
             portLookup[port.id] = port;
             ports.push(port);
             return port;
         });
 
         this.outputs = outputElements.map(element => {
-            const port = new NodePort(this, element, false);
+            const port = new ShapePort(this, element, false);
             portLookup[port.id] = port;
             ports.push(port);
             return port;
         });
     }
 
+    /*
+    When the gate is dragged then all the ports on that gate need to be updated.
+    This method goes through all of this gates ports and instructs them to update themselves
+     */
     onDrag() {
 
         for (let input of this.inputs) {
@@ -324,21 +329,19 @@ class NodeShape {
         for (let output of this.outputs) {
             output.update();
         }
-    }}
+    }
+}
 
-
-//
-// DIAGRAM
-// ===========================================================================
-class Diagram {
-
+/*
+Represents a circuit board that contains all the gates and connections between gates
+ */
+class CircuitBoard {
     constructor() {
-
         this.dragElement = this.element = diagramElement;
         shapeElements.forEach((element, i) => {
-            const shape = new NodeShape(element, 50 , 50 + i * 100);
+            const shape = new CircuitShape(element, 50 , 50 + i * 100);
             shapeLookup[shape.id] = shape;
-            gates.push(shape);
+            circuitShapes.push(shape);
         });
 
         this.target = null;
@@ -362,13 +365,17 @@ class Diagram {
     }
 
     prepareTarget(event) {
-
         let element = event.target;
         let drag;
 
-        while (!(drag = element.getAttribute("data-drag")) && element !== svg) {if (window.CP.shouldStopExecution(0)) break;
+        while (!(drag = element.getAttribute("data-drag")) && element !== svg) {
+            if (window.CP.shouldStopExecution(0))
+                break;
+
             element = element.parentNode;
-        }window.CP.exitedLoop(0);
+        }
+
+        window.CP.exitedLoop(0);
 
         drag = drag || "diagram:diagram";
         const split = drag.split(":");
@@ -398,19 +405,15 @@ class Diagram {
     }
 
     dragTarget() {
-
         TweenLite.set(this.target.dragElement, {
             x: `+=${this.draggable.deltaX}`,
             y: `+=${this.draggable.deltaY}` });
 
 
         this.target.onDrag && this.target.onDrag();
-    }}
+    }
+}
 
-
-//
-// APP
-// ===========================================================================
 
 let nextUid = 0;
 
@@ -424,7 +427,7 @@ const portLookup = {};
 const connectorLookup = {};
 
 const ports = [];//port stack
-const gates = [];//shape stack
+const circuitShapes = [];//shape stack
 const connectorPool = [];
 
 const dragProxy = document.querySelector("#drag-proxy");
@@ -435,5 +438,5 @@ frag.appendChild(document.querySelector(".connector"));
 const connectorElement = frag.querySelector(".connector");
 const connectorLayer = document.querySelector("#connections-layer");
 
-const diagram = new Diagram();
+const diagram = new CircuitBoard();
 
