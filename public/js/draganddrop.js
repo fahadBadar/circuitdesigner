@@ -11,7 +11,7 @@ class Connector {
     constructor() {
         this.id = `connector_${++nextUid}`; // The id attribute uniquely identifies a connection in the diagram
         this.dragType = "connector";        // Identifies this instance as a connector for dragging and dropping
-        this.isSelected = false;            // Todo: To be used later for selecting and removing a connector
+        this.isSelected = false;            // Sets a boolean value on weather a port is selected
         this.element = connectorElement.cloneNode(true); // Uses the connector template to create a new SVG connector
         this.path = this.element.querySelector(".connector-path"); // References to the connector path SVG element, used to draw the line
         this.pathOutline = this.element.querySelector(".connector-path-outline"); // References to the connector path outline SVG element, used to draw the outline
@@ -36,10 +36,9 @@ class Connector {
             this.dragElement = this.inputHandle;
             this.staticElement = this.outputHandle;
         }
-        5
-        this.staticPort = port;
 
-        // Todo: Describe the significance of the data-drag attributes that I am setting here
+        this.staticPort = port;
+        
         this.dragElement.setAttribute("data-drag", `${this.id}:connector`);
         this.staticElement.setAttribute("data-drag", `${port.id}:port`);
 
@@ -417,7 +416,7 @@ class CircuitBoard {
 
 let nextUid = 0;
 
-const bezierWeight = 0.675;//shape of the path
+const bezierWeight = 0.675; // Connection curve intensity
 
 const svg = document.querySelector("#svg");
 const diagramElement = document.querySelector("#diagram");
@@ -426,8 +425,9 @@ const shapeLookup = {};
 const portLookup = {};
 const connectorLookup = {};
 
-const ports = [];//port stack
-const circuitShapes = [];//shape stack
+// Lists containing circuit shapes
+const ports = [];
+const circuitShapes = [];
 const connectorPool = [];
 
 const dragProxy = document.querySelector("#drag-proxy");
@@ -438,5 +438,6 @@ frag.appendChild(document.querySelector(".connector"));
 const connectorElement = frag.querySelector(".connector");
 const connectorLayer = document.querySelector("#connections-layer");
 
+// Creates a new circuit board
 const diagram = new CircuitBoard();
 
