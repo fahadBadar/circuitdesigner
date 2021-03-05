@@ -38,7 +38,7 @@ class Connector {
         }
 
         this.staticPort = port;
-        
+
         this.dragElement.setAttribute("data-drag", `${this.id}:connector`);
         this.staticElement.setAttribute("data-drag", `${port.id}:port`);
 
