@@ -359,6 +359,16 @@ class CircuitBoard {
 
     }
 
+    createGate(gateType)
+    {
+        const clone = document.querySelector(gateType).cloneNode( true );
+        const shape = new CircuitShape(clone, 50 , 200)
+        shapeLookup[shape.id] = shape;
+        circuitShapes.push(shape);
+        document.querySelector('#node-layer').appendChild(clone);
+
+    }
+
     stopDragging() {
         this.target.onDragEnd && this.target.onDragEnd();
     }
