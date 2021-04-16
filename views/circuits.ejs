@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <%- include('header'); -%>
+    <title>Circuit Board: Open Saved Circuit </title>
+</head>
+<body>
+<section class="section">
+    <div class="container">
+        <%- include('nav'); -%>
+        <div class="content">
+            <h2>Open Saved Circuit</h2>
+            <ul>
+                <% if(messages.success_msg) { %>
+                    <li><%= messages.success_msg %></li>
+                <% } %>
+            </ul>
+            <ul>
+                <% if (messages.error) { %>
+                    <li> <%= messages.error %> </li>
+                <% } %>
+            </ul>
+
+            <ul>
+                <% if (circuits.length === 0) { %>
+                    <li>No saved circuits.</li>
+                <% } else { %>
+                    <% circuits.forEach(circuit => { %>
+                        <li><a href="/users/dashboard?circuit_id=<%= circuit.id %>"><%= circuit.name %></a></li>
+                <% }); } %>
+            </ul>
+        </div>
+    </div>
+</section>
+</body>
+</html>

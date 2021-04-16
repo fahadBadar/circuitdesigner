@@ -1,78 +1,73 @@
-<!doctype html>
-    <html lang="en">
-    <style>
-        body {
-            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        }
-        .andGate {
-            position: absolute;
-            padding: 10px;
-            cursor: move;
-
-        }
-        .orGate {
-            position: absolute;
-            padding: 10px;
-            cursor: move;
-            top: 282px;
-            left: 6px;
-        }
-        .notGate{
-            position: absolute;
-            padding: 10px;
-            cursor: move;
-            top: 351px;
-            left: 6px;
-        }
-        .xorGate
-        {
-            position: absolute;
-            padding: 10px;
-            cursor: move;
-            top: 420px;
-            left: 6px;
-        }
-    </style>
-        <head>
-            <link href='https://fonts.googleapis.com/css?family=DM Sans' rel='stylesheet'>
-            <style>
-                body {
-                    font-family: 'DM Sans';font-size: 20px;
-                }
-            </style>
-            <meta charset="UTF-8">
-            <meta name="viewport"
-                  content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-            <meta http-equiv="X-UA-Compatible" content="ie=edge">
-            <title>Document</title>
-        </head>
-        <body>
-
-            <h1>Dashboard</h1>
-            <h1>Hello <%= username %></h1>
-            <a href="/users/logout">logout</a>
-            <div class="andGate" onclick="dragNewElement('.andGate')">
-                <img src="https://www.clipartmax.com/png/small/8-88193_and-gate-clip-art-logic-gate-png.png" alt="And Gate Clip Art - Logic Gate Png @clipartmax.com" width="60" height="40">
+<!DOCTYPE html>
+<html>
+<head>
+    <%- include('header'); -%>
+    <title>Circuit Board</title>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jointjs/2.1.0/joint.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/draganddrop.css"/>
+</head>
+<body>
+<section class="section">
+    <div class="container">
+        <%- include('nav'); -%>
+        <div class="block">
+            <div class="field is-pulled-right">
+                <div class="control pl-6">
+                    <button class="button is-link is-light" onclick="saveDiagram()">Save</button>
+                </div>
             </div>
 
-            <div class="orGate" onclick="dragNewElement('.orGate')">
-                <img src="https://www.clipartmax.com/png/small/47-478617_the-and-gate-is-similar-to-multiplication-in-the-sense-circuit-of.png" alt="The And Gate Is Similar To Multiplication In The Sense - Circuit" width="60" height="40">
+            <div class="field has-addons has-addons-right">
+                <p class="control"><input class="input is-pulled-right" id="circuit_name" type="text" placeholder="Name"></p>
+                <p class="control">
+                    <button class="button" onclick="saveNewDiagram()">Save New</button>
+                </p>
             </div>
 
-            <div class="notGate" onclick="dragNewElement('.notGate')">
-                <img src="https://www.clipartmax.com/png/small/56-560565_symbol-of-not-gate.png" alt="Symbol Of Not Gate @clipartmax.com" alt = "Not gate" width = "60" height  = "40">
-            </div>
 
-            <div class="xorGate" onclick="dragNewElement('.xorGate')">
-                <img src="https://www.clipartmax.com/png/small/47-479605_xor-xor-gate.png" alt="Xor - Xor Gate @clipartmax.com" width = "60" height = 40>
+            <div class="box field is-grouped">
+                <div class="control">
+                    <button class="button is-link is-light" onclick="addGate('logic.Input')"><img class="image" src="/img/input.png"/></button>
+                </div>
+                <div class="control">
+                    <button class="button is-link is-light" onclick="addGate('logic.And')"><img class="image" src="/img/and.png"/></button>
+                </div>
+                <div class="control">
+                    <button class="button is-link is-light" onclick="addGate('logic.Nand')"><img class="image" src="/img/nand.png"/></button>
+                </div>
+                <div class="control">
+                    <button class="button is-link is-light" onclick="addGate('logic.Or')"><img class="image" src="/img/or.png"/></button>
+                </div>
+                <div class="control">
+                    <button class="button is-link is-light" onclick="addGate('logic.Nor')"><img class="image" src="/img/nor.png"/></button>
+                </div>
+                <div class="control">
+                    <button class="button is-link is-light" onclick="addGate('logic.Xor')"><img class="image" src="/img/xor.png"/></button>
+                </div>
+                <div class="control">
+                    <button class="button is-link is-light" onclick="addGate('logic.Xnor')"><img class="image" src="/img/xnor.png"/></button>
+                </div>
+                <div class="control">
+                    <button class="button is-link is-light" onclick="addGate('logic.Not')"><img class="image" src="/img/not.png"/></button>
+                </div>
+                <div class="control">
+                    <button class="button is-link is-light" onclick="addGate('logic.Output')"><img class="image" src="/img/output.png"/>
+                    </button>
+                </div>
             </div>
+        </div>
 
-            <script src="/js/draganddrop.js"></script>
-            <script>//creates an element on top of the original one to stop having to click on the gate before dragging
-                dragNewElement('.andGate');
-                dragNewElement('.orGate');
-                dragNewElement('.notGate');
-                dragNewElement('.xorGate');
-            </script>
-        </body>
-    </html>
+
+    </div>
+</section>
+<div id="paper"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.1/lodash.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.3.3/backbone.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jointjs/2.1.0/joint.js"></script>
+<script src='/js/draganddrop.js'></script>
+<% if (circuit_id) { %>
+<script>loadCircuit('<%= circuit_id%>') </script>
+<% } %>
+</body>
+</html>
